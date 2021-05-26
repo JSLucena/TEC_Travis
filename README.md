@@ -6,3 +6,4 @@ Test results:
 
 [<img alt="Build Status" src="https://www.travis-ci.com/JSLucena/TEC_Travis.svg?branch=main" height="40">][travis-url]
 
+[travis-url]: https://www.travis-ci.com/JSLucena/TEC_Travis
