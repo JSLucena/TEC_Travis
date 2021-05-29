@@ -1,0 +1,23 @@
+# Travis example for Identifier created by Rafael Garibotti
+
+sudo: false
+language: c
+compiler:
+  - gcc
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc
+      - cppcheck
+      - valgrind
+install:
+  - "[ $GCC = gcc ] && export GCC=gcc || true"
+script:
+  - cd ./code
+  - make identifier
+  - cppcheck --enable=all --suppress=missingIncludeSystem src/identifier.c
+  - make clean
+  - make addrsanitizer
+  - ./identifier
