@@ -10,8 +10,13 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - gcc
+      - cppcheck
+      - valgrind
 install:
   - "[ $GCC = gcc ] && export GCC=gcc || true"
 script:
-  - make
-#  - make test
+  - make identifier
+  - cppcheck --enable=all --suppress=missingIncludeSystem src/identifier.c
+  - make clean
+  - make addrsanitizer
+  - ./identifier
