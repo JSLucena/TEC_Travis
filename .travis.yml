@@ -21,4 +21,4 @@ script:
   - cppcheck --enable=all --suppress=missingIncludeSystem src/identifier.c
   - make clean
   - make cov
-  - ./identifier
+  - ./id
