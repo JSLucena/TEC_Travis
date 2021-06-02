@@ -2,7 +2,7 @@
 
 static void RunAllTests(void)
 {
-  RUN_TEST_GROUP(identifier);
+  RUN_TEST_GROUP(Identifier);
 }
 
 int main(int argc, const char * argv[])

@@ -64,21 +64,22 @@ all: $(ALL)
 
 unitytest:
 	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(SRC_FILES1) -o $(TARGET1)
+	./all_tests.out -v
 
 identifier:
-	$(C_COMPILER) $(CFLAGS) -o identifier src/identifier.c
+	$(C_COMPILER) $(CFLAGS) -o id src/id.c
 cov:
-	$(C_COMPILER) $(CFLAGS) -fprofile-arcs -ftest-coverage -o identifier src/identifier.c
+	$(C_COMPILER) $(CFLAGS) -fprofile-arcs -ftest-coverage -o id src/id.c
 
 addrsanitizer:
-	$(C_COMPILER) $(CFLAGS) -fsanitize=address -fprofile-arcs -ftest-coverage -o identifier src/identifier.c
+	$(C_COMPILER) $(CFLAGS) -fsanitize=address -fprofile-arcs -ftest-coverage -o id src/id.c
 
 
 run:
 	- ./$(TARGET1) -v	
 
 clean:
-	rm -fr $(ALL) *.o cov* *.dSYM *.gcda *.gcno *.gcov
+	rm -fr $(ALL) *.o cov* *.dSYM *.gcda *.gcno *.gcov *.out
 
 cleanunity:
 	$(CLEANUP) $(TARGET1)

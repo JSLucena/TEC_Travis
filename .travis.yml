@@ -15,9 +15,10 @@ addons:
 install:
   - "[ $GCC = gcc ] && export GCC=gcc || true"
 script:
-  - cd ./code
-  - make identifier
+  - cd ./code/identifier
+  - ls
+  - make unitytest
   - cppcheck --enable=all --suppress=missingIncludeSystem src/identifier.c
   - make clean
-  - make addrsanitizer
+  - make cov
   - ./identifier
