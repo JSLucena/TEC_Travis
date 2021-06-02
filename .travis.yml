@@ -22,3 +22,4 @@ script:
   - make clean
   - make cov
   - ./id
+  - abc
