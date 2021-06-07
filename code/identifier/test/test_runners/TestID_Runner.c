@@ -5,5 +5,5 @@ TEST_GROUP_RUNNER(Identifier)
 {
   RUN_TEST_CASE(Identifier, validS);
   RUN_TEST_CASE(Identifier, validF);
-  //RUN_TEST_CASE(Foo, TestFoo2);
+  RUN_TEST_CASE(Identifier, id);
 }

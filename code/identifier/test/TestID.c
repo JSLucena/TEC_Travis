@@ -35,3 +35,14 @@ TEST(Identifier, validF)
 
 //  TEST_ASSERT_EQUAL(1,identifier());
 }
+TEST(Identifier, id)
+{
+  TEST_ASSERT_EQUAL(0, identifier("ABC\n",3));
+  TEST_ASSERT_EQUAL(1, identifier("2AC2\n",4));
+ // TEST_ASSERT_EQUAL(0, valid_f(' '));
+ // TEST_ASSERT_EQUAL(1, valid_f('Z'));
+ // TEST_ASSERT_EQUAL(1, valid_f('1'));
+  //TEST_ASSERT_NOT_EQUAL(1, valid_f('*'));
+
+//  TEST_ASSERT_EQUAL(1,identifier());
+}

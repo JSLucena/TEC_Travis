@@ -19,6 +19,3 @@ script:
   - ls
   - make unitytest
   - cppcheck --enable=all --suppress=missingIncludeSystem src/identifier.c
-  - make clean
-  - make cov
-  - ./id < teste.txt
