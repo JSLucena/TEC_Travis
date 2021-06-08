@@ -15,34 +15,34 @@ TEST_TEAR_DOWN(Identifier)
 TEST(Identifier, validS)
 {
   // All of these should pass
-//  TEST_ASSERT_EQUAL(0, identifier(' '));
   TEST_ASSERT_EQUAL(1, valid_s('A'));
+  TEST_ASSERT_EQUAL(0, valid_s('A'- 1));
   TEST_ASSERT_EQUAL(0, valid_s(' '));
-  TEST_ASSERT_EQUAL(1, valid_s('Z'));
+  TEST_ASSERT_EQUAL(1, valid_s('z'));
+  TEST_ASSERT_EQUAL(0, valid_s('z'+ 1));
   TEST_ASSERT_NOT_EQUAL(1, valid_s('!'));
- // TEST_ASSERT_EQUAL(1, identifier('z'));
- // TEST_ASSERT_EQUAL(1, identifier('z'+1));
- // TEST_ASSERT_EQUAL(2, identifier('z'+1));
+  TEST_ASSERT_EQUAL(0, valid_s(32));
+
 }
 
 TEST(Identifier, validF)
 {
   TEST_ASSERT_EQUAL(1, valid_f('A'));
   TEST_ASSERT_EQUAL(0, valid_f(' '));
-  TEST_ASSERT_EQUAL(1, valid_f('Z'));
-  TEST_ASSERT_EQUAL(1, valid_f('1'));
+  TEST_ASSERT_EQUAL(1, valid_f('z'));
+  TEST_ASSERT_EQUAL(0, valid_f('0' - 1));
+  TEST_ASSERT_EQUAL(0, valid_s('z'+ 1));
   TEST_ASSERT_NOT_EQUAL(1, valid_f('*'));
+  TEST_ASSERT_EQUAL(0, valid_s(32));
 
-//  TEST_ASSERT_EQUAL(1,identifier());
 }
 TEST(Identifier, id)
 {
-  TEST_ASSERT_EQUAL(0, identifier("ABC\n",3));
-  TEST_ASSERT_EQUAL(1, identifier("2AC2\n",4));
- // TEST_ASSERT_EQUAL(0, valid_f(' '));
- // TEST_ASSERT_EQUAL(1, valid_f('Z'));
- // TEST_ASSERT_EQUAL(1, valid_f('1'));
-  //TEST_ASSERT_NOT_EQUAL(1, valid_f('*'));
-
-//  TEST_ASSERT_EQUAL(1,identifier());
+  TEST_ASSERT_EQUAL(1, identifier("A00000\n"));
+  TEST_ASSERT_EQUAL(0, identifier("A0000\n"));
+  TEST_ASSERT_EQUAL(0, identifier("zzzzz\n"));
+  TEST_ASSERT_EQUAL(1, identifier("A000/\n"));
+  TEST_ASSERT_EQUAL(1, identifier("zzzz{\n"));
+  TEST_ASSERT_EQUAL(1, identifier("2AC2\n"));
+  TEST_ASSERT_EQUAL(1, identifier("1\n"));
 }

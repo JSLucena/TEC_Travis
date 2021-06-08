@@ -20,17 +20,22 @@ int valid_f(char ch) {
     return 0;
 }
 
-int identifier(char *ch, int length) {
+int identifier(char *ch) {
   char achar;
-  int   valid_id;
+  int length,  valid_id;
+  length = 0;
   printf("Identificador: ");
   achar = *(ch++);
   valid_id = valid_s(achar);
+  if(valid_id) {
+    length = 1;
+  }
   achar = *(ch++);
   while(achar != '\n') {
     if(!(valid_f(achar))) {
       valid_id = 0;
     }
+    length++;
     achar = *(ch++);
   }
   if (valid_id && (length >= 1) && (length < 6)) {

@@ -42,7 +42,7 @@ CFLAGS += -Wno-unknown-pragmas
 CFLAGS += -Wstrict-prototypes
 CFLAGS += -Wundef
 CFLAGS += -Wold-style-definition
-CFLAGS += -g 
+CFLAGS += -ggdb3
 CFLAGS += -Wfatal-errors 
 
 TARGET_BASE1=all_tests
@@ -66,13 +66,14 @@ unitytest:
 	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(SRC_FILES1) -fprofile-arcs -ftest-coverage -o $(TARGET1)
 	./all_tests.out -v
 
-identifier:
+id:
 	$(C_COMPILER) $(CFLAGS) -o id src/id.c
 cov:
 	$(C_COMPILER) $(CFLAGS) -fprofile-arcs -ftest-coverage -o id src/id.c
 
 addrsanitizer:
-	$(C_COMPILER) $(CFLAGS) -fsanitize=address -fprofile-arcs -ftest-coverage -o id src/id.c
+	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(SRC_FILES1) -fprofile-arcs -ftest-coverage -fsanitize=address -o $(TARGET1)
+	./all_tests.out -v
 
 
 run:
@@ -84,8 +85,12 @@ clean:
 cleanunity:
 	$(CLEANUP) $(TARGET1)
 
-test: all
-	bash identifier
+test: addrsanitizer clean unitytest
+	echo $(shell valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./all_tests.out)
+	echo $(shell gcov -b identifier)
+	echo $(shell cppcheck --enable=all --suppress=missingIncludeSystem src/identifier.c)
+	
 
 ci: CFLAGS += -Werror
+
 
