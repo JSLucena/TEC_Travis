@@ -17,5 +17,4 @@ install:
 script:
   - cd ./code/identifier
   - ls
-  - make unitytest
-  - cppcheck --enable=all --suppress=missingIncludeSystem src/identifier.c
+  - make test
