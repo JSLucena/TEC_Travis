@@ -79,10 +79,7 @@ unitytest:
 	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(SRC_FILES1) -fprofile-arcs -ftest-coverage -o $(TARGET1)
 	./all_tests.out -v
 
-id:
-	$(C_COMPILER) $(CFLAGS) -o id src/id.c
-cov:
-	$(C_COMPILER) $(CFLAGS) -fprofile-arcs -ftest-coverage -o id src/id.c
+#cov:$(C_COMPILER) $(CFLAGS) -fprofile-arcs -ftest-coverage -o id src/id.c
 
 addrsanitizer:
 	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(SRC_FILES1) -fprofile-arcs -ftest-coverage -fsanitize=address -o $(TARGET1)
@@ -100,11 +97,11 @@ cleanunity:
 
 test: addrsanitizer clean unitytest
 	echo $(shell valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./all_tests.out)
-	echo $(shell gcov -b identifier)
-	echo $(shell cppcheck --enable=all --suppress=missingIncludeSystem src/identifier.c)
+	echo $(shell gcov -b crypt aes xtea blowfish)
+	echo $(shell cppcheck --enable=all --suppress=missingIncludeSystem src/crypt.c src/aes.c src/xtea.c src/blowfish.c)
 	
 
-ci: CFLAGS += -Werror
+#ci: CFLAGS += -Werror
 
 ##### General commands #####
 main: $(SRC_FILES)

@@ -1,0 +1,221 @@
+        -:    0:Source:src/blowfish.c
+        -:    1:// FILE NAME  : blowfish.c
+        -:    2:// AUTHOR     : Rafael Garibotti
+        -:    3:// DEVELOPERS : Rafael Garibotti
+        -:    4:// E-mail     : rafael.garibotti@pucrs.br
+        -:    5://-----------------------------------------------------------------------------
+        -:    6:// RELEASE HISTORY
+        -:    7:// VERSION   DATE         DESCRIPTION
+        -:    8:// 1.0       2021-06-08   Initial version.
+        -:    9://-----------------------------------------------------------------------------
+        -:   10:
+        -:   11:#include <stdio.h>
+        -:   12:#include <stdlib.h>
+        -:   13:#include "blowfish.h"
+        -:   14:
+        -:   15://-----------------------------------------------------------------------------
+        -:   16:// Blowfish: 64-bits
+        -:   17://-----------------------------------------------------------------------------
+        -:   18:unsigned int
+function F called 50208 returned 100% blocks executed 100%
+    50208:   19:F(BLOWFISH_CTX *ctx, unsigned int x) {
+        -:   20:  unsigned int a, b, c, d;
+        -:   21:  unsigned int y;
+        -:   22:
+    50208:   23:  d = (unsigned int)(x & 0xFF);
+    50208:   24:  x >>= 8;
+    50208:   25:  c = (unsigned int)(x & 0xFF);
+    50208:   26:  x >>= 8;
+    50208:   27:  b = (unsigned int)(x & 0xFF);
+    50208:   28:  x >>= 8;
+    50208:   29:  a = (unsigned int)(x & 0xFF);
+    50208:   30:  y = ctx->S[0][a] + ctx->S[1][b];
+    50208:   31:  y = y ^ ctx->S[2][c];
+    50208:   32:  y = y + ctx->S[3][d];
+        -:   33:
+    50208:   34:  return y;
+    50208:   34-block  0
+        -:   35:}
+        -:   36:
+        -:   37:void
+function blowfish_enc called 3132 returned 100% blocks executed 100%
+     3132:   38:blowfish_enc(BLOWFISH_CTX *ctx, unsigned int *xl, unsigned int *xr){
+        -:   39:  int   i;
+        -:   40:  unsigned int Xl, Xr, temp;
+        -:   41:
+     3132:   42:  Xl = *xl;
+     3132:   43:  Xr = *xr;
+        -:   44:
+    53244:   45:  for (i = 0; i < N; ++i) {
+     3132:   45-block  0
+    53244:   45-block  1
+branch  0 taken 94%
+branch  1 taken 6% (fallthrough)
+    50112:   46:    Xl = Xl ^ ctx->P[i];
+    50112:   47:    Xr = F(ctx, Xl) ^ Xr;
+    50112:   47-block  0
+call    0 returned 100%
+        -:   48:
+    50112:   49:    temp = Xl;
+    50112:   50:    Xl = Xr;
+    50112:   51:    Xr = temp;
+        -:   52:  }
+        -:   53:
+     3132:   54:  temp = Xl;
+     3132:   55:  Xl = Xr;
+     3132:   56:  Xr = temp;
+        -:   57:
+     3132:   58:  Xr = Xr ^ ctx->P[N];
+     3132:   59:  Xl = Xl ^ ctx->P[N + 1];
+        -:   60:
+     3132:   61:  *xl = Xl;
+     3132:   62:  *xr = Xr;
+     3132:   63:}
+        -:   64:
+        -:   65:void
+function blowfish_dec called 6 returned 100% blocks executed 100%
+        6:   66:blowfish_dec(BLOWFISH_CTX *ctx, unsigned int *xl, unsigned int *xr){
+        -:   67:  int   i;
+        -:   68:  unsigned int Xl, Xr, temp;
+        -:   69:
+        6:   70:  Xl = *xl;
+        6:   71:  Xr = *xr;
+        -:   72:
+      102:   73:  for (i = N + 1; i > 1; --i) {
+        6:   73-block  0
+      102:   73-block  1
+branch  0 taken 94%
+branch  1 taken 6% (fallthrough)
+       96:   74:    Xl = Xl ^ ctx->P[i];
+       96:   75:    Xr = F(ctx, Xl) ^ Xr;
+       96:   75-block  0
+call    0 returned 100%
+        -:   76:
+       96:   77:    temp = Xl;
+       96:   78:    Xl = Xr;
+       96:   79:    Xr = temp;
+        -:   80:  }
+        -:   81:
+        6:   82:  temp = Xl;
+        6:   83:  Xl = Xr;
+        6:   84:  Xr = temp;
+        -:   85:
+        6:   86:  Xr = Xr ^ ctx->P[1];
+        6:   87:  Xl = Xl ^ ctx->P[0];
+        -:   88:
+        6:   89:  *xl = Xl;
+        6:   90:  *xr = Xr;
+        6:   91:}
+        -:   92:
+        -:   93:void
+function blowfish_init called 6 returned 100% blocks executed 100%
+        6:   94:blowfish_init(BLOWFISH_CTX *ctx, unsigned int *key, int keyLen) {
+        -:   95:  int i, j;
+        -:   96:  unsigned int data, datal, datar;
+        -:   97:
+       30:   98:  for (i = 0; i < 4; i++) {
+        6:   98-block  0
+       24:   98-block  1
+       30:   98-block  2
+branch  0 taken 80%
+branch  1 taken 20% (fallthrough)
+     6168:   99:    for (j = 0; j < 256; j++)
+       24:   99-block  0
+     6168:   99-block  1
+branch  0 taken 100%
+branch  1 taken 1% (fallthrough)
+     6144:  100:      ctx->S[i][j] = ORIG_S[i][j];
+     6144:  100-block  0
+        -:  101:  }
+        -:  102:
+        6:  103:  j = 0;
+      114:  104:  for (i = 0; i < N + 2; ++i) {
+        6:  104-block  0
+      114:  104-block  1
+branch  0 taken 95%
+branch  1 taken 5% (fallthrough)
+      108:  105:    data = 0x00000000;
+      108:  106:    ctx->P[i] = ORIG_P[i] ^ key[i % keyLen];
+      108:  106-block  0
+        -:  107:  }
+        -:  108:
+        6:  109:  datal = 0x00000000;
+        6:  110:  datar = 0x00000000;
+        -:  111:
+       60:  112:  for (i = 0; i < N + 2; i += 2) {
+        6:  112-block  0
+       60:  112-block  1
+branch  0 taken 90%
+branch  1 taken 10% (fallthrough)
+       54:  113:    blowfish_enc(ctx, &datal, &datar);
+       54:  113-block  0
+call    0 returned 100%
+       54:  114:    ctx->P[i] = datal;
+       54:  115:    ctx->P[i + 1] = datar;
+        -:  116:  }
+        -:  117:
+       30:  118:  for (i = 0; i < 4; ++i) {
+        6:  118-block  0
+       24:  118-block  1
+       30:  118-block  2
+branch  0 taken 80%
+branch  1 taken 20% (fallthrough)
+     3096:  119:    for (j = 0; j < 256; j += 2) {
+       24:  119-block  0
+     3096:  119-block  1
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+     3072:  120:      blowfish_enc(ctx, &datal, &datar);
+     3072:  120-block  0
+call    0 returned 100%
+     3072:  121:      ctx->S[i][j] = datal;
+     3072:  122:      ctx->S[i][j + 1] = datar;
+        -:  123:    }
+        -:  124:  }
+        6:  125:}
+        -:  126:
+        -:  127://-----------------------------------------------------------------------------
+        -:  128:// Blowfish: 128-bits
+        -:  129://-----------------------------------------------------------------------------
+        -:  130:void
+function blowfish_128 called 6 returned 100% blocks executed 100%
+        6:  131:blowfish_128(unsigned int* key, unsigned int* input, int type, int enc_dec, unsigned int *output) {
+        -:  132:  int i;
+        -:  133:  int keysize;
+        -:  134:  unsigned int *L, *R;
+        -:  135:  BLOWFISH_CTX ctx;
+        -:  136:
+        6:  137:  keysize = 2*(type-2); // 4 to 128 bits, 6 to 192 bits, 8 to 256 bits
+        -:  138:
+        6:  139:  blowfish_init (&ctx, key, keysize);
+        6:  139-block  0
+call    0 returned 100%
+        -:  140:
+        6:  141:  L = (unsigned int *) malloc(sizeof(unsigned int));
+        6:  142:  R = (unsigned int *) malloc(sizeof(unsigned int));
+       18:  143:  for(i = 0; i < 2; i++) {
+       18:  143-block  0
+branch  0 taken 67%
+branch  1 taken 33% (fallthrough)
+       12:  144:    *L = input[i*2];
+       12:  145:    *R = input[i*2+1];
+        -:  146:
+       12:  147:    if (enc_dec)
+       12:  147-block  0
+branch  0 taken 50% (fallthrough)
+branch  1 taken 50%
+        6:  148:      blowfish_enc(&ctx, L, R);
+        6:  148-block  0
+call    0 returned 100%
+        -:  149:    else
+        6:  150:      blowfish_dec(&ctx, L, R);
+        6:  150-block  0
+call    0 returned 100%
+        -:  151:
+       12:  152:    output[i*2]   = *L;
+       12:  153:    output[i*2+1] = *R;
+       12:  153-block  0
+        -:  154:  }
+        6:  155:  free(L);
+        6:  156:  free(R);
+        6:  157:}
