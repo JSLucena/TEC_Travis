@@ -96,7 +96,7 @@ cppcheck:
 	cppcheck --enable=all -v --suppress=missingIncludeSystem src/crypt.c src/aes.c src/xtea.c src/blowfish.c
 
 gcov:
-	gcov -b -a -f -k crypt aes xtea blowfish
+	gcov -b -a -f crypt aes xtea blowfish
 
 valgrind:
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./all_tests.out
