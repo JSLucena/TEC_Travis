@@ -35,7 +35,7 @@ int main(void)
   printf("\n(ENC) --\n");
 
   // Write plantext
-  unsigned int plan[4] = {0xA5A5A5A5L, 0x01234567L, 0xFEDCBA98L, 0x5A5A5A5AL};
+  unsigned int plan[5] = {0xA5A5A5A5L, 0x01234567L, 0xFEDCBA98L, 0x5A5A5A5AL,0xA5A5A5A5L};
   printf("%08X %08X %08X %08X (Plan)\n", plan[0], plan[1], plan[2], plan[3]);
 
   // Write enc_dec

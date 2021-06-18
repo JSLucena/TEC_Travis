@@ -1,0 +1,91 @@
+        -:    0:Colorization: profile count: [46m[Kzero coverage (exceptional)[m[K [41m[Kzero coverage (unexceptional)[m[K [45m[Kunexecuted block[m[K
+        -:    0:Source:src/xtea.c
+        -:    1:// FILE NAME  : xtea.c
+        -:    2:// AUTHOR     : Rafael Garibotti
+        -:    3:// DEVELOPERS : Rafael Garibotti
+        -:    4:// E-mail     : rafael.garibotti@pucrs.br
+        -:    5://-----------------------------------------------------------------------------
+        -:    6:// RELEASE HISTORY
+        -:    7:// VERSION   DATE         DESCRIPTION
+        -:    8:// 1.0       2021-06-08   Initial version.
+        -:    9://-----------------------------------------------------------------------------
+        -:   10:
+        -:   11:#include "xtea.h"
+        -:   12:
+        -:   13://-----------------------------------------------------------------------------
+        -:   14:// XTEA: 128-bits
+        -:   15://-----------------------------------------------------------------------------
+        -:   16:void
+function xtea_enc called 1 returned 100% blocks executed 100%
+        1:   17:xtea_enc(unsigned int **dest, const unsigned int **v, const unsigned int **k) {
+        -:   18:  int i;
+        1:   19:  unsigned int y0 = *v[0], z0 = *v[1], y1 = *v[2], z1 = *v[3];
+        1:   20:  unsigned int sum = 0, delta = 0x9E3779B9;
+        -:   21:
+       33:   22:  for(i = 0; i < 32; i++) {
+        1:   22-block  0
+       33:   22-block  1
+branch  0 taken 97%
+branch  1 taken 3% (fallthrough)
+       32:   23:    y0  += ((z0 << 4 ^ z0 >> 5) + z0) ^ (sum + *k[sum & 3]);
+       32:   24:    y1  += ((z1 << 4 ^ z1 >> 5) + z1) ^ (sum + *k[sum & 3]);
+       32:   25:    sum += delta;
+       32:   26:    z0  += ((y0 << 4 ^ y0 >> 5) + y0) ^ (sum + *k[sum>>11 & 3]);
+       32:   27:    z1  += ((y1 << 4 ^ y1 >> 5) + y1) ^ (sum + *k[sum>>11 & 3]);
+       32:   27-block  0
+        -:   28:  }
+        1:   29:  *dest[0]=y0; *dest[1]=z0; *dest[2]=y1; *dest[3]=z1;
+        1:   30:}
+        -:   31:
+        -:   32:void
+function xtea_dec called 1 returned 100% blocks executed 100%
+        1:   33:xtea_dec(unsigned int **dest, const unsigned int **v, const unsigned int **k) {
+        -:   34:  int i;
+        1:   35:  unsigned int y0 = *v[0], z0 = *v[1], y1 = *v[2], z1 = *v[3];
+        1:   36:  unsigned int sum = 0xC6EF3720, delta = 0x9E3779B9;
+       33:   37:  for(i = 0; i < 32; i++) {
+        1:   37-block  0
+       33:   37-block  1
+branch  0 taken 97%
+branch  1 taken 3% (fallthrough)
+       32:   38:    z1  -= ((y1 << 4 ^ y1 >> 5) + y1) ^ (sum + *k[sum>>11 & 3]);
+       32:   39:    z0  -= ((y0 << 4 ^ y0 >> 5) + y0) ^ (sum + *k[sum>>11 & 3]);
+       32:   40:    sum -= delta;
+       32:   41:    y1  -= ((z1 << 4 ^ z1 >> 5) + z1) ^ (sum + *k[sum & 3]);
+       32:   42:    y0  -= ((z0 << 4 ^ z0 >> 5) + z0) ^ (sum + *k[sum & 3]);
+       32:   42-block  0
+        -:   43:  }
+        1:   44:  *dest[0]=y0; *dest[1]=z0; *dest[2]=y1; *dest[3]=z1;
+        1:   45:}
+        -:   46:
+        -:   47:void
+function xtea called 2 returned 100% blocks executed 100%
+        2:   48:xtea(unsigned int* key, unsigned int* input, int enc_dec, unsigned int *output) {
+        -:   49:  int i;
+        -:   50:  unsigned int* d[4];
+        -:   51:  const unsigned int* v[4];
+        -:   52:  const unsigned int* k[4];
+        -:   53:
+       10:   54:  for(i = 0; i < 4; i++) {
+        2:   54-block  0
+       10:   54-block  1
+branch  0 taken 80%
+branch  1 taken 20% (fallthrough)
+        8:   55:    d[i] = &output[3-i];
+        8:   56:    v[i] = &input[3-i];
+        8:   57:    k[i] = &key[3-i];
+        8:   57-block  0
+        -:   58:  }
+        -:   59:
+        2:   60:  if (enc_dec)
+        2:   60-block  0
+branch  0 taken 50% (fallthrough)
+branch  1 taken 50%
+        1:   61:    xtea_enc(d, v, k);
+        1:   61-block  0
+call    0 returned 100%
+        -:   62:  else
+        1:   63:    xtea_dec(d, v, k);
+        1:   63-block  0
+call    0 returned 100%
+        2:   64:}

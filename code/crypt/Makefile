@@ -71,43 +71,50 @@ SRC_FILES = src/*.c
 
 
 
-ALL = app
+ALL = clean cppcheck addrsanitizer run clean unitytest run valgrind gcov
 
 all: $(ALL)
-
-unitytest:
-	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(SRC_FILES1) -fprofile-arcs -ftest-coverage -o $(TARGET1)
-	./all_tests.out -v
-
-#cov:$(C_COMPILER) $(CFLAGS) -fprofile-arcs -ftest-coverage -o id src/id.c
-
-addrsanitizer:
-	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(SRC_FILES1) -fprofile-arcs -ftest-coverage -fsanitize=address -o $(TARGET1)
-	./all_tests.out -v
-
-
-run:
-	- ./$(TARGET1) -v	
-
-clean:
-	rm -fr $(ALL) *.o cov* *.dSYM *.gcda *.gcno *.gcov *.out
-
-cleanunity:
-	$(CLEANUP) $(TARGET1)
-
-test: addrsanitizer clean unitytest
-	echo $(shell valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./all_tests.out)
-	echo $(shell gcov -b crypt aes xtea blowfish)
-	echo $(shell cppcheck --enable=all --suppress=missingIncludeSystem src/crypt.c src/aes.c src/xtea.c src/blowfish.c)
-	
-
-#ci: CFLAGS += -Werror
 
 ##### General commands #####
 main: $(SRC_FILES)
 	$(CC) $(CFLAGS) $^ -o app
 	#ma$(CC) *.o -o app
 #	rm -rf *.o
+
+run:
+	- ./$(TARGET1) -v	
+
+
+###################### TEST TOOLS#######################################
+unitytest:
+	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(SRC_FILES1) -fprofile-arcs -ftest-coverage -o $(TARGET1)
+
+addrsanitizer:
+	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(SRC_FILES1) -fsanitize=address -o $(TARGET1)
+
+cppcheck:
+	cppcheck --enable=all -v --suppress=missingIncludeSystem src/crypt.c src/aes.c src/xtea.c src/blowfish.c
+
+gcov:
+	gcov -b -a -f -k crypt aes xtea blowfish
+
+valgrind:
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./all_tests.out
+#########################################################################
+clean:
+	rm -fr $(ALL) *.o cov* *.dSYM *.gcda *.gcno *.gcov *.out
+
+cleanunity:
+	$(CLEANUP) $(TARGET1)
+
+
+
+test: addrsanitizer clean unitytest
+	
+
+#ci: CFLAGS += -Werror
+
+
 
 
 

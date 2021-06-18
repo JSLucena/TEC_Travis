@@ -24,4 +24,10 @@ TEST_GROUP_RUNNER(Crypt)
   RUN_TEST_CASE(Crypt, BLOWFISH256ENC);
   RUN_TEST_CASE(Crypt, BLOWFISH256DEC);
 
+
+  //Teste Limite Tipo
+  RUN_TEST_CASE(Crypt, INVTYPE);
+
+  
+
 }
