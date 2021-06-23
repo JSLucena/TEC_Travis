@@ -182,7 +182,7 @@ TEST(Crypt, INVTYPE)
   ref[3] = 0xCC9161D3;  
 
 
-  type = 8;
+  type = 7;
   crypt(key, plan, type, enc_dec, cipher);
   TEST_ASSERT_EQUAL_UINT_ARRAY(plan, cipher, 4);
 }
